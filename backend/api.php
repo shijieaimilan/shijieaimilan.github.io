@@ -1,5 +1,11 @@
-<?php
- //https://www.leaseweb.com/labs/2015/10/creating-a-simple-rest-api-in-php/
+
+<?php 
+
+//https://www.leaseweb.com/labs/2015/10/creating-a-simple-rest-api-in-php/
+//ej. http://localhost/api.php/{$table}/{$id}
+
+include 'db-config.php';
+
 // get the HTTP method, path and body of the request
 $method = $_SERVER['REQUEST_METHOD'];
 $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
@@ -12,7 +18,7 @@ echo ' test data: '.$_POST;
  
 // connect to the mysql database
 // Create connection
-$conn = new mysqli('localhost', 'root', '', 'whishlist');
+$conn = new mysqli($db, $user, $pass, 'whishlist');
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
