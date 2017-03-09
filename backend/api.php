@@ -7,6 +7,8 @@ $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
 $my_method = $request[0];
 
 echo 'metodo: '. $request[0]. '<br>';
+
+echo ' test data: '.$_POST;
  
 // connect to the mysql database
 // Create connection
@@ -18,14 +20,15 @@ if ($conn->connect_error) {
 
 
 switch ($my_method) {
-    case 'get-available-things':
-        echo "i es igual a 0";
-        break;
-    case 'get-reserved-things':
-        echo "i es igual a 1";
-        break;
     case 'get-all-things':
-        echo "i es igual a 2";
+  		$sql = "SELECT * FROM things";
+        $result = $conn->query($sql);
+
+        $rows = array();
+        while($r = mysqli_fetch_assoc($result)) {
+            $rows[] = $r;
+        } 
+        echo json_encode($rows);
         break;
     case 'add-thing':
         echo "i es igual a 2";
@@ -43,13 +46,7 @@ switch ($my_method) {
 
 
 
-$sql = "SELECT * FROM things";
-$result = $conn->query($sql);
 
-$rows = array();
-while($r = mysqli_fetch_assoc($result)) {
-    $rows[] = $r;
-}
-echo json_encode($rows);
+
 $conn->close();
 ?>
