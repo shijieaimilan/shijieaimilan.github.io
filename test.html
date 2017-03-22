@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+        <script language="javascript" type="text/javascript">
+
+
+         
+           $(document).ready(function() {
+
+               var data = {"id":"2","title":"plancha2","description":"para planchar","url":null,"reserver":null};
+               $.ajax({
+                    type: "POST",
+                    url:"backend/api.php/add-thing",
+                    async: true,
+                    data: {data:data},
+                    success: function(data)
+                    {
+                        // var status = JSON.parse(data);
+                        // alert(status);
+                        console.log(data);
+                    },
+                    error: function (obj, error, objError){
+                        //avisar que ocurrió un error
+                        
+                    }});
+            });
+
+      </script>
+    </head>
+
+   <body>
+       
+      
+      
+   </body>
+</html>

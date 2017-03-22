@@ -12,13 +12,15 @@ $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
 
 $my_method = $request[0];
 
-echo 'metodo: '. $request[0]. '<br>';
-
-echo ' test data: '.$_POST;
+// echo 'metodo: '. $request[0]. '<br>';
+//$data = file_get_contents("php://input");
+$data = $_POST['data'];
+ echo '' . json_encode($data).'';
+// echo ' termino';
  
 // connect to the mysql database
 // Create connection
-$conn = new mysqli($db, $user, $pass, 'whishlist');
+$conn = new mysqli($host, $user, $pass, $db);
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -26,8 +28,8 @@ if ($conn->connect_error) {
 
 
 switch ($my_method) {
-    case 'get-all-things':
-  		$sql = "SELECT * FROM things";
+    case 'get-all-things':  
+  		$sql = "SELECT * FROM wishlistthings";
         $result = $conn->query($sql);
 
         $rows = array();
@@ -37,7 +39,17 @@ switch ($my_method) {
         echo json_encode($rows);
         break;
     case 'add-thing':
-        echo "i es igual a 2";
+        // $thing = json_decode($data);
+        // echo json_encode($thing);
+
+        // $sql = "INSERT INTO wishlistthings VALUES";
+        // $result = $conn->query($sql);
+
+        // $rows = array();
+        // while($r = mysqli_fetch_assoc($result)) {
+        //     $rows[] = $r;
+        // } 
+        // echo json_encode($rows);
         break;
     case 'reserve-thing':
         echo "i es igual a 2";
