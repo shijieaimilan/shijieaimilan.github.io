@@ -195,6 +195,17 @@ class Service {
 
         return $rv;
     }
+
+    function login($data) {
+        $rv = false;
+        $user = $obj['user'];
+        $pass = $obj['pass'];
+
+        $rv = $user == 'zeqk' && $pass == 'ezequiel123';
+
+        return $rv;
+
+    }
 }
 
 ?>

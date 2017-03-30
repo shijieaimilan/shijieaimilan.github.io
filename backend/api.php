@@ -43,6 +43,9 @@ try {
         case 'update-thing':
             $rv = $service->updateThing($data);
             break;
+        case 'login':
+            $rv = $service->login($data);
+            break;
     }
 
 } catch (Exception $e) {
