@@ -1,7 +1,7 @@
 
 <?php 
 
-include 'dao.php';
+include 'service.php';
 
 //https://www.leaseweb.com/labs/2015/10/creating-a-simple-rest-api-in-php/
 //ej. http://localhost/api.php/{$table}/{$id}
@@ -15,7 +15,7 @@ $my_method = $request[0];
 $rv;
 
 try {
-    $dao = new DAO;
+    $service = new Service;
 
     $data;
     if(isset($_POST['data'])) {
@@ -26,27 +26,22 @@ try {
 
     switch ($my_method) {
         case 'get-all-things':  
-            $rv = $dao->getAll();
+            $rv = $service->getAll();
             break;
         case 'add-thing':
-            $rv = new stdClass();
-            $rv->result = $dao->addThings($data);
+            $rv = $service->addThings($data);
             break;
         case 'reserve-thing':
-            $rv = new stdClass();
-            $rv->result = $dao->reserveThing($data);
+            $rv = $service->reserveThing($data);
             break;
         case 'remove-reserved-thing':
-            $rv = new stdClass();
-            $rv->result = $dao->removeReservedThing($data);
+            $rv = $service->removeReservedThing($data);
             break;
         case 'delete-thing':
-            $rv = new stdClass();
-            $rv->result = $dao->deleteThing($data);
+            $rv = $service->deleteThing($data);
             break;
         case 'update-thing':
-            $rv = new stdClass();
-            $rv->result = $dao->updateThing($data);
+            $rv = $service->updateThing($data);
             break;
     }
 
