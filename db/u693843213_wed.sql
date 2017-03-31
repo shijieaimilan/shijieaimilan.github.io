@@ -2,10 +2,10 @@
 -- version 4.6.5.2
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 31, 2017 at 05:04 AM
--- Server version: 10.1.21-MariaDB
--- PHP Version: 7.1.1
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 31-03-2017 a las 18:23:09
+-- Versión del servidor: 10.1.21-MariaDB
+-- Versión de PHP: 5.6.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,27 +17,34 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `u693843213_wed`
+-- Base de datos: `u693843213_wed`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `guests`
+-- Estructura de tabla para la tabla `mercapagorequests`
 --
 
-CREATE TABLE `guests` (
+CREATE TABLE `mercapagorequests` (
   `id` int(11) NOT NULL,
-  `name` text NOT NULL,
-  `description` text,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `email` text
+  `name` varchar(20) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `amount` decimal(10,0) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Volcado de datos para la tabla `mercapagorequests`
+--
+
+INSERT INTO `mercapagorequests` (`id`, `name`, `email`, `amount`) VALUES
+(1, 'Ezequiel', 'zeqk@dasd.com', '100'),
+(2, 'eze', 'zeqk.net@gmail.com', '200');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wishlistthings`
+-- Estructura de tabla para la tabla `wishlistthings`
 --
 
 CREATE TABLE `wishlistthings` (
@@ -51,45 +58,44 @@ CREATE TABLE `wishlistthings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `wishlistthings`
+-- Volcado de datos para la tabla `wishlistthings`
 --
 
 INSERT INTO `wishlistthings` (`id`, `title`, `description`, `url`, `reserver`, `reserverEmail`, `cancelationCode`) VALUES
-(13, 'plancha', 'plancha', 'sad', 'juan2', 'juan2@juan.com', '95695'),
-(15, 'taza', 'para tomar', 'www.google.com', NULL, NULL, ''),
-(16, 'taza', '2', NULL, NULL, NULL, ''),
-(17, 'taza3', NULL, NULL, NULL, NULL, ''),
-(18, 'plancha2', '', NULL, NULL, NULL, ''),
-(19, 'plancha4', '', '', NULL, NULL, ''),
-(20, 'savana2', 'savana2', NULL, 'eze', 'dasd@dasd.com', '62456');
+(21, 'Plancha', NULL, NULL, 'eze', 'zeqk.net@gmail.com', '38613'),
+(22, 'escoba', NULL, NULL, NULL, NULL, '');
 
 --
--- Indexes for dumped tables
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `guests`
+-- Indices de la tabla `mercapagorequests`
 --
-ALTER TABLE `guests`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+ALTER TABLE `mercapagorequests`
+  ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `wishlistthings`
+-- Indices de la tabla `wishlistthings`
 --
 ALTER TABLE `wishlistthings`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT for table `wishlistthings`
+-- AUTO_INCREMENT de la tabla `mercapagorequests`
+--
+ALTER TABLE `mercapagorequests`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT de la tabla `wishlistthings`
 --
 ALTER TABLE `wishlistthings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

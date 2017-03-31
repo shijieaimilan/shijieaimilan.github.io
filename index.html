@@ -64,12 +64,7 @@
 	<script src="js/respond.min.js"></script>
 	<![endif]-->
 
-	<script src="js/jquery.i18n.js"></script>
-	<script src="js/jquery.i18n.messagestore.js"></script>
-	<script src="js/jquery.i18n.fallbacks.js"></script>
-	<script src="js/jquery.i18n.parser.js"></script>
-	<script src="js/jquery.i18n.emitter.js"></script>
-	<script src="js/jquery.i18n.language.js"></script>
+	
 
 	</head>
 	<body>
@@ -85,9 +80,9 @@
 				</div>
 				<div class="col-xs-10 text-right menu-1">
 					<ul>
-						<!--<li class="active"><a href="index.html">Home</a></li>-->
-						<!--<li><a href="about.html">Historia</a></li>
-						<li class="has-dropdown">
+						<li class="active"><a href="index.html">Home</a></li>
+						<li><a href="gifts/">Regalos</a></li>
+						<!--<li class="has-dropdown">
 							<a href="services.html">Services</a>
 							<ul class="dropdown">
 								<li><a href="#">Web Design</a></li>
@@ -135,7 +130,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
-					<h2>Hola!</h2>
+					<h2>Bienvenido!</h2>
 					<h3>Sábado 3 de Junio 2017</h3>
 					<p>Lo invitamos a nuestra boda</p>
 				</div>
@@ -614,19 +609,19 @@
 	<script src="js/main.js"></script>
 
 	<script>
-    var d = new Date(2017,06,03);
+    var d = new Date(2017,06,03);//los meses empiezan de 0
 
     // default example
     simplyCountdown('.simply-countdown-one', {
         year: d.getFullYear(),
-        month: d.getMonth() + 1,
+        month: d.getMonth(),
         day: d.getDate()
     });
 
     //jQuery example
     $('#simply-countdown-losange').simplyCountdown({
         year: d.getFullYear(),
-        month: d.getMonth() + 1,
+        month: d.getMonth(),
         day: d.getDate(),
         enableUtc: false
     });

@@ -196,6 +196,32 @@ class Service {
         return $rv;
     }
 
+    function requestMercapago($obj) {
+        $rv = new stdClass();
+
+        $conn = $this->getConn();
+        
+        $rv->result = false;
+        
+        $email = $obj['email'];
+        $name = $obj['name'];
+        $amount = $obj['amount'];
+
+        $stmt = $conn->prepare("INSERT INTO mercapagorequests(name, email,amount) VALUES (?,?,?)");
+        $stmt->bind_param('ssd', $name,$email,$amount);
+        $rv->result = $stmt->execute();
+        if($rv->result)
+            $rv->message = "Su solicitud fue recibida. En breve le enviaremos un email solicitando su donación por Mercapago";
+        else {
+            $rv->message = "La solicitud no pudo ser enviada. Intentelo en otro momento por favor";
+        }
+        
+        $stmt->close();
+        $conn->close();
+
+        return $rv;
+    }
+
     function login($obj) {
         $rv = false;
         $user = $obj['user'];
