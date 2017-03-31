@@ -196,7 +196,7 @@ class Service {
         return $rv;
     }
 
-    function login($data) {
+    function login($obj) {
         $rv = false;
         $user = $obj['user'];
         $pass = $obj['pass'];
