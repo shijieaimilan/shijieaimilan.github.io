@@ -104,6 +104,8 @@ class Service {
     function reserveThing($obj) {
 
         $rv = new stdClass();
+        $rv->result = false;
+        $rv->reserved = false; 
 
         $conn = $this->getConn();
 
@@ -112,35 +114,59 @@ class Service {
         $reserverEmail = $obj['reserverEmail'];
         $cancelationCode = (string)rand(10000,99999);
 
-        $stmt = $conn->prepare("UPDATE wishlistthings SET `reserver`=?, `reserverEmail`=?, `cancelationCode`=? WHERE `id`=?");        
+        $stmt = $conn->prepare("UPDATE wishlistthings SET `reserver`=?, `reserverEmail`=?, `cancelationCode`=? WHERE `id`=? AND `reserver` IS NULL");        
         $stmt->bind_param('sssi', $reserver, $reserverEmail, $cancelationCode, $id);
-        $rv->result = $stmt->execute();
+        $stmt->execute();
+        $rv->result = $mysqli->affected_rows > 0;
 
         $stmt->close();
 
-        $stmt2 = $conn->prepare("SELECT id, title, reserver, reserverEmail, cancelationCode FROM wishlistthings WHERE `id`=?");
-        $stmt2->bind_param('i', $id);   
+        if($rv->result) {
 
-        $stmt2->execute();     
+            $stmt2 = $conn->prepare("SELECT id, title, reserver, reserverEmail, cancelationCode FROM wishlistthings WHERE `id`=?");
+            $stmt2->bind_param('i', $id);   
 
-        $stmt2->bind_result($id, $title, $reserver2, $reserverEmail2, $cancelationCode2);
+            $stmt2->execute();     
 
-        $thing = null;
-        while($stmt2->fetch()) {
-            $thing = new stdClass();
-            $thing->id = $id;
-            $thing->title = $title;
-            $thing->reserver = $reserver2;
-            $thing->reserverEmail = $reserverEmail2;
-            $thing->cancelationCode = $cancelationCode2;    
-            break;     
-        } 
+            $stmt2->bind_result($id, $title, $reserver2, $reserverEmail2, $cancelationCode2);
 
-        $stmt2->close();
+            $thing = null;
+            while($stmt2->fetch()) {
+                $thing = new stdClass();
+                $thing->id = $id;
+                $thing->title = $title;
+                $thing->reserver = $reserver2;
+                $thing->reserverEmail = $reserverEmail2;
+                $thing->cancelationCode = $cancelationCode2;    
+                break;     
+            } 
 
-        $conn->close();
+            $stmt2->close();
 
-        $rv->message = "El regalo fue reservado. Su código de cancelación es ".$cancelationCode2;
+            $conn->close();
+
+            $rv->message = "El regalo fue reservado. Su código de cancelación es ".$cancelationCode2;
+        } else {
+            $stmt3 = $conn->prepare("SELECT COUNT(*) FROM wishlistthings WHERE `id`=?");
+            $stmt3->bind_param('i', $id);   
+        
+            $stmt3->execute();
+
+            $stmt3->bind_result($count);
+
+            $stmt3->fetch();
+
+            $stmt3->close();
+
+            if($count > 0) {          
+                $rv->message = "No fue posible hacer la reserva. El regalo fue reservado recientemente.";
+                $rv->reserved = true;
+            }
+            else {
+                $rv->message = "No fue posible hacer la reserva.";
+            }
+        }
+
         //$this->sendReserveConfirmationEmail($thing);
 
         return $rv;
