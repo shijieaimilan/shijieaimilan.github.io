@@ -146,6 +146,9 @@ class Service {
             $conn->close();
 
             $rv->message = "El regalo fue reservado. Su código de cancelación es ".$cancelationCode2;
+
+            $this->sendReserveConfirmationEmail($thing);
+
         } else {
             $stmt3 = $conn->prepare("SELECT COUNT(*) FROM wishlistthings WHERE `id`=?");
             $stmt3->bind_param('i', $id);   
@@ -167,15 +170,17 @@ class Service {
             }
         }
 
-        //$this->sendReserveConfirmationEmail($thing);
+        
 
         return $rv;
     }
 
     function sendReserveConfirmationEmail($thing) {
         if(!is_null($thing->reserveremail)) {
+            $headers = 'From: Adri y Eze <no-responder@shijieaimilan.tk>';
+
             $message = "Su reserva ha sido confirmado. ".$thing.title." ha sido reservado para usted. Si se arrepiente puede cancelar la reserva con su código de cancelación: ". $thing.cancelationcode." Muchas gracias ".$thing.reserver;
-            //mail($thing->reserveremail, "Reserva confirmada", $message);
+            mail($thing->reserveremail, "Reserva confirmada", $message, $headers);
         }
     }
 
@@ -236,8 +241,10 @@ class Service {
         $stmt = $conn->prepare("INSERT INTO mercapagorequests(name, email,amount) VALUES (?,?,?)");
         $stmt->bind_param('ssd', $name,$email,$amount);
         $rv->result = $stmt->execute();
-        if($rv->result)
+        if($rv->result) {
+            $this->sendMercapagoRequest($email,$name,$amount);
             $rv->message = "Su solicitud fue recibida. En breve le enviaremos un email solicitando su donación por Mercapago";
+        }
         else {
             $rv->message = "La solicitud no pudo ser enviada. Intentelo en otro momento por favor";
         }
@@ -246,6 +253,14 @@ class Service {
         $conn->close();
 
         return $rv;
+    }
+
+    function sendMercapagoRequest($email, $name, $amount) {
+        
+        $headers = 'From: Adri y Eze <no-responder@shijieaimilan.tk>';
+
+        $message = $name." ( ".$email." ) ha solicitado una donación por mercapago de $".$amount;
+        mail('zeqk.net@gmail.com', "Solicitud de mercapago", $message, $headers);
     }
 
     function login($obj) {
