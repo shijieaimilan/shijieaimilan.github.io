@@ -176,11 +176,11 @@ class Service {
     }
 
     function sendReserveConfirmationEmail($thing) {
-        if(!is_null($thing->reserveremail)) {
+        if(!is_null($thing->reserverEmail)) {
             $headers = 'From: Adri y Eze <no-responder@shijieaimilan.tk>';
 
-            $message = "Su reserva ha sido confirmado. ".$thing.title." ha sido reservado para usted. Si se arrepiente puede cancelar la reserva con su código de cancelación: ". $thing.cancelationcode." Muchas gracias ".$thing.reserver;
-            mail($thing->reserveremail, "Reserva confirmada", $message, $headers);
+            $message = "Su reserva ha sido confirmado. ".$thing->title." ha sido reservado para usted. Si se arrepiente puede cancelar la reserva con su código de cancelación: ". $thing->cancelationCode." Muchas gracias ".$thing->reserver;
+            mail($thing->reserverEmail, "Reserva confirmada", $message, $headers);
         }
     }
 
