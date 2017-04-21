@@ -117,7 +117,7 @@ class Service {
         $stmt = $conn->prepare("UPDATE wishlistthings SET `reserver`=?, `reserverEmail`=?, `cancelationCode`=? WHERE `id`=? AND `reserver` IS NULL");        
         $stmt->bind_param('sssi', $reserver, $reserverEmail, $cancelationCode, $id);
         $stmt->execute();
-        $rv->result = $mysqli->affected_rows > 0;
+        $rv->result = $stmt->affected_rows > 0;
 
         $stmt->close();
 
