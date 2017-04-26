@@ -78,7 +78,7 @@ class Service {
         $amount = $obj['amount'];
 
         $stmt = $conn->prepare("UPDATE wishlistthings SET `title`=?,`description`=?,`url`=?, `amount`=? WHERE `id`=?");
-        $stmt->bind_param('sssid', $title,$description, $url,$id, $amount);
+        $stmt->bind_param('sssdi', $title,$description, $url,$amount, $id);
         $rv->result = $stmt->execute();
 
         $stmt->close();
@@ -104,7 +104,7 @@ class Service {
         return $rv;
     }
 
-    function reserveThing($obj) {
+    function reserveThing($obj, $sendMoney) {
 
         $rv = new stdClass();
         $rv->result = false;
@@ -150,7 +150,7 @@ class Service {
 
             $rv->message = "El regalo fue reservado. Su código de cancelación es ".$cancelationCode2;
 
-            $this->sendReserveConfirmationEmail($thing);
+            $this->sendReserveConfirmationEmail($thing, $sendMoney);
 
         } else {
             $stmt3 = $conn->prepare("SELECT COUNT(*) FROM wishlistthings WHERE `id`=?");
@@ -178,11 +178,14 @@ class Service {
         return $rv;
     }
 
-    function sendReserveConfirmationEmail($thing) {
+    function sendReserveConfirmationEmail($thing, $sendMoney) {
         if(!is_null($thing->reserverEmail)) {
             $headers = 'From: Adri y Eze <no-responder@shijieaimilan.tk>';
 
-            $message = "Su reserva ha sido confirmado. ".$thing->title." ha sido reservado para usted. Si se arrepiente puede cancelar la reserva con su código de cancelación: ". $thing->cancelationCode." Muchas gracias ".$thing->reserver;
+            if($sendMoney)
+                $message = "Gracias por su regalo. En breve recibirá una solicitud de Mercapago para hacer una donación desde el sitio de Mercapago de forma segura";
+            else
+                $message = "Su reserva ha sido confirmado. ".$thing->title." ha sido reservado para usted. Si se arrepiente puede cancelar la reserva con su código de cancelación: ". $thing->cancelationCode." Muchas gracias ".$thing->reserver;
             mail($thing->reserverEmail, "Reserva confirmada", $message, $headers);
         }
     }
@@ -234,7 +237,7 @@ class Service {
         $rv = new stdClass();
         $rv->result = false; 
 
-        $result = $this->reserveThing($obj);
+        $result = $this->reserveThing($obj, true);
 
         // $rv->result = $result->result;
 

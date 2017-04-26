@@ -32,7 +32,7 @@ try {
             $rv = $service->addThings($data);
             break;
         case 'reserve-thing':
-            $rv = $service->reserveThing($data);
+            $rv = $service->reserveThing($data, false);
             break;
         case 'remove-reserved-thing':
             $rv = $service->removeReservedThing($data);
