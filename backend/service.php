@@ -20,11 +20,11 @@ class Service {
 
         $conn = $this->getConn();
 
-        $stmt = $conn->prepare("SELECT id, title, description, url, reserver, reserverEmail, cancelationCode FROM wishlistthings");
+        $stmt = $conn->prepare("SELECT id, title, description, url, reserver, reserverEmail, cancelationCode, amount FROM wishlistthings");
         
         $stmt->execute();
 
-        $stmt->bind_result($id, $title, $description, $url, $reserver, $reserverEmail, $cancelationCode);
+        $stmt->bind_result($id, $title, $description, $url, $reserver, $reserverEmail, $cancelationCode, $amount);
 
         $rows = array();
         while($stmt->fetch()) {
@@ -36,6 +36,7 @@ class Service {
             $r->reserver = $reserver;
             $r->reserverEmail = $reserverEmail;
             $r->cancelationCode = $cancelationCode;
+            $r->amount = $amount;
             $rows[] = $r;
         } 
         $stmt->close();
@@ -53,9 +54,10 @@ class Service {
         $title = $obj['title'];
         $description = $obj['description'];
         $url = $obj['url'];
+        $amount = $obj['amount'];
 
-        $stmt = $conn->prepare("INSERT INTO wishlistthings(title, description, url) VALUES (?,?,?)");
-        $stmt->bind_param('sss', $title,$description, $url);
+        $stmt = $conn->prepare("INSERT INTO wishlistthings(title, description, url, amount) VALUES (?,?,?,?)");
+        $stmt->bind_param('sssd', $title,$description, $url, $amount);
         $rv->result = $stmt->execute();
         
         $stmt->close();
@@ -73,9 +75,10 @@ class Service {
         $title = $obj['title'];
         $description = $obj['description'];
         $url = $obj['url'];
+        $amount = $obj['amount'];
 
-        $stmt = $conn->prepare("UPDATE wishlistthings SET `title`=?,`description`=?,`url`=? WHERE `id`=?");
-        $stmt->bind_param('sssi', $title,$description, $url,$id);
+        $stmt = $conn->prepare("UPDATE wishlistthings SET `title`=?,`description`=?,`url`=?, `amount`=? WHERE `id`=?");
+        $stmt->bind_param('sssid', $title,$description, $url,$id, $amount);
         $rv->result = $stmt->execute();
 
         $stmt->close();
@@ -227,6 +230,36 @@ class Service {
         return $rv;
     }
 
+    function requestSendMoney($obj) {
+        $rv = new stdClass();
+        $rv->result = false; 
+
+        $result = $this->reserveThing($obj);
+
+        // $rv->result = $result->result;
+
+        if($result->result) {
+            $mercapagoRequest = array();
+            $mercapagoRequest['email'] = $obj['reserverEmail'];
+            $mercapagoRequest['name'] = $obj['reserver'];
+            $mercapagoRequest['detail'] = $obj['title'].'. ID REGALO: '.$obj['id'];            
+            //amount
+            $mercapagoRequest['amount'] = $obj['amount'];
+            $result2 = $this->requestMercapago($mercapagoRequest);
+
+            $rv->result = $result2->result;
+
+            $rv->message = $result2->message;
+        }
+        else {
+            $rv->result = $result->result;
+            $rv->message = $result->message;
+            $rv->reserved = $result->reserved;
+        }
+
+        return $rv;
+    }
+
     function requestMercapago($obj) {
         $rv = new stdClass();
 
@@ -237,12 +270,13 @@ class Service {
         $email = $obj['email'];
         $name = $obj['name'];
         $amount = $obj['amount'];
+        $detail = $obj['detail'];
 
-        $stmt = $conn->prepare("INSERT INTO mercapagorequests(name, email,amount) VALUES (?,?,?)");
-        $stmt->bind_param('ssd', $name,$email,$amount);
+        $stmt = $conn->prepare("INSERT INTO mercapagorequests(name, email,amount,detail) VALUES (?,?,?,?)");
+        $stmt->bind_param('ssds', $name,$email,$amount,$detail);
         $rv->result = $stmt->execute();
         if($rv->result) {
-            $this->sendMercapagoRequest($email,$name,$amount);
+            $this->sendMercapagoRequest($email,$name,$amount,$detail);
             $rv->message = "Su solicitud fue recibida. En breve le enviaremos un email solicitando su donación por Mercapago";
         }
         else {
@@ -255,11 +289,11 @@ class Service {
         return $rv;
     }
 
-    function sendMercapagoRequest($email, $name, $amount) {
+    function sendMercapagoRequest($email, $name, $amount, $detail) {
         
         $headers = 'From: Adri y Eze <no-responder@shijieaimilan.tk>';
 
-        $message = $name." ( ".$email." ) ha solicitado una donación por mercapago de $".$amount;
+        $message = $name." ( ".$email." ) ha solicitado una donación por mercapago de $".$amount.". Mensaje: ".$detail;
         mail('zeqk.net@gmail.com', "Solicitud de mercapago", $message, $headers);
     }
 

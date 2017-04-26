@@ -46,6 +46,9 @@ try {
         case 'request-mercapago':
             $rv = $service->requestMercapago($data);
             break;
+        case 'request-send-money':
+            $rv = $service->requestSendMoney($data);
+            break;
         case 'login':
             $rv = $service->login($data);
             break;
