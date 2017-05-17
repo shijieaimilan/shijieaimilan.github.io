@@ -1201,13 +1201,15 @@
 
 
 	<script>
-    var d = new Date(2017,06,03,14);//los meses empiezan de 0
+    var d = new Date(2017,06,03,14,20);//los meses empiezan de 0
 
     // default example
     simplyCountdown('.simply-countdown-one', {
         year: d.getFullYear(),
         month: d.getMonth(),
-        day: d.getDate()
+        day: d.getDate(),
+				hours: d.getHours(),
+				minutes: d.getMinutes()
     });
 
     //jQuery example
@@ -1215,6 +1217,8 @@
         year: d.getFullYear(),
         month: d.getMonth(),
         day: d.getDate(),
+				hours: d.getHours(),
+				minutes: d.getMinutes(),
         enableUtc: false
     });
 </script>
